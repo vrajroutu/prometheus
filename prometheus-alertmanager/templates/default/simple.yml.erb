@@ -1,0 +1,86 @@
+global:
+  # The smarthost and SMTP sender used for mail notifications.
+  smtp_smarthost: '<%= @emailsmtp %>'
+  smtp_from: '<%= @fromemail %>'
+  smtp_auth_username: '<%= @username %>'
+  smtp_auth_password: '<%= @password %>'
+  # The auth token for Hipchat.
+#  hipchat_auth_token: '1234556789'
+#  # Alternative host for Hipchat.
+#  hipchat_url: 'https://hipchat.foobar.org/'
+
+#  pagerduty_configs:
+#   - service_key: <%= @pagerdutyapi %>
+#
+# The directory from which notification templates are read.
+templates:
+    - '/etc/alertmanager/template/*.tmpl'
+
+#route:
+# group_by: [cluster]
+# # If an alert isn't caught by a route, send it slack.
+# receiver: slack_general
+# routes:
+  # Send severity=slack alerts to slack.
+#  - match:
+#      severity: slack
+#    receiver: slack_general
+
+#receivers:
+#- name: slack_general
+#  slack_configs:
+#    - api_url: 'dfgh'
+#      channel: '#general'
+#      text: ''
+#      username: 'AlertManager'
+#      send_resolved: true
+#
+route:
+  group_by: ['alertname', 'job', 'environment', 'stack', 'layer', 'instance', 'uid', 'device_name', 'organization_name' ]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 30m
+  receiver: infra-team
+  routes:
+    - match:
+        severity: critical
+      receiver: infra-team
+  routes:
+    - match:
+        severity: info
+      receiver: db-team
+  routes:
+    - match:
+        severity: warning
+      receiver: itops-team
+receivers:
+- name: 'infra-team'
+  email_configs:
+  - to: '<%= @infra_team %>'
+    headers:
+       Subject: '{{ range .Alerts }}Stack: {{ .Labels.stack_name}} | Organization: {{ .Labels.organization_name }} | Device: {{ .Labels.device_name }} | Alert: {{ .Labels.alertname }} | Canvas: {{ .Labels.device_name }} | UID: {{ .Labels.uid }} | Current Value: {{ .Annotations.value }}{{ end }}'
+  pagerduty_configs:
+  - service_key: <%= @pagerdutyapi %>
+    description: '{{ range .Alerts }}Stack: {{ .Labels.stack_name}} | Organization: {{ .Labels.organization_name }} | Device: {{ .Labels.device_name }} | Serial Number: {{ .Labels.uid }} | Alert: {{ .Labels.alertname }} | Severity: {{ .Labels.severity }} | Message: {{ .Annotations.description }} | Current Value: {{ .Annotations.value }}{{ end }}'
+    client_url: "{{ .ExternalURL }}/#/alerts?filter=%7B{{ range .Alerts }}alertname%3D%22{{ .Labels.alertname }}%22{{ end }}%7D"
+
+- name: 'db-team'
+  email_configs:
+  - to: '<%= @db_team %>'
+    headers:
+      Subject: '{{ range .Alerts }}Stack: {{ .Labels.stack_name}} | Organization: {{ .Labels.organization_name }} | Device: {{ .Labels.device_name }} | Alert: {{ .Labels.alertname }} | Canvas: {{ .Labels.device_name }} | UID: {{ .Labels.uid }} | Current Value: {{ .Annotations.value }}{{ end }}'
+  pagerduty_configs:
+  - service_key: <%= @pagerdutyapi %>
+    description: '{{ range .Alerts }}Stack: {{ .Labels.stack_name}} | Organization: {{ .Labels.organization_name }} | Device: {{ .Labels.device_name }} | Serial Number: {{ .Labels.uid }} | Alert: {{ .Labels.alertname }} | Severity: {{ .Labels.severity }} | Message: {{ .Annotations.description }} | Current Value: {{ .Annotations.value }}{{ end }}'
+    client_url: "{{ .ExternalURL }}/#/alerts?filter=%7B{{ range .Alerts }}alertname%3D%22{{ .Labels.alertname }}%22{{ end }}%7D"
+
+- name: 'itops-team'
+  email_configs:
+  - to: '<%= @itops_team %>'
+    headers:
+      Subject: '{{ range .Alerts }}Stack: {{ .Labels.stack_name}} | Organization: {{ .Labels.organization_name }} | Device: {{ .Labels.device_name }} | Alert: {{ .Labels.alertname }} | Canvas: {{ .Labels.device_name }} | UID: {{ .Labels.uid }} | Current Value: {{ .Annotations.value }}{{ end }}'
+  pagerduty_configs:
+  - service_key: <%= @pagerdutyapi %>
+    description: '{{ range .Alerts }}Stack: {{ .Labels.stack_name}} | Organization: {{ .Labels.organization_name }} | Device: {{ .Labels.device_name }} | Serial Number: {{ .Labels.uid }} | Alert: {{ .Labels.alertname }} | Severity: {{ .Labels.severity }} | Message: {{ .Annotations.description }} | Current Value: {{ .Annotations.value }}{{ end }}'
+    client_url: "{{ .ExternalURL }}/#/alerts?filter=%7B{{ range .Alerts }}alertname%3D%22{{ .Labels.alertname }}%22{{ end }}%7D"
+

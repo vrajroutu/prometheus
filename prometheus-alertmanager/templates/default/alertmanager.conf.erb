@@ -1,0 +1,9 @@
+#alertmanager Upstart script
+
+start on startup
+script
+/usr/bin/alertmanager --config.file=/opt/prometheus/alertmanager/alertmanager.yml --web.external-url=<%= node['monitoring']['alertmanager']['web_url'] %> >> /var/log/alertmanager.log 2>&1
+end script
+
+
+ 

@@ -1,0 +1,6 @@
+#Prometheus Process Exporter Upstart script
+
+start on startup
+script
+/usr/bin/process-exporter --web.listen-address <%= node['prometheus']['process_exporter']['exporter']['port'] %> >> /var/log/process_exporter.log 2>&1
+end script

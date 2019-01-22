@@ -1,0 +1,733 @@
+groups:
+- name: monitoring
+  rules:
+
+  # Alert for any instance that is unreachable for >1 minutes.
+  - alert: InstanceDown
+    expr: up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Instance {{ $labels.instance }} down"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minutes."
+
+  # Alert for device_Cache_Count < 2 for >1 minutes.
+  - alert: Device_Cache_Count
+    expr: Device_Cache_Count < 2 
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: " Device {{ $labels.uid }} Device_Cache_Count < 2  for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} Device_cache_Count < 2 ."
+
+  # Alert for Device_Link_Quality < 2 for >1 minutes.
+  - alert: Device_Link_Quality
+    expr: Device_Link_Quality < 2
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: " Device {{ $labels.uid }} Device_Link_Quality < 2 for >1 minutes in {{ $labels.instance }} "
+      description: "Device {{ $labels.uid }} of job {{ $labels.job }} device_link_quality < 2 ."
+
+  # Alert for Device_Ping_Quality == 0 for >1 minutes.
+  - alert: Device_Ping_Quality
+    expr: Device_Ping_quality == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: " Device {{ $labels.uid }} Device_Ping_Quality == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "Device {{ $labels.uid }} of job {{ $labels.job }} Device_Ping_Quality == 0"
+
+  # Alert for Device_Playback_Quality < 3 for >1 minutes.
+  - alert: Device_Playback_Quality 
+    expr: Device_Playback_Quality < 3
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: " Device {{ $labels.uid }} Device_Playback_Quality < 3 for >1 minutes in {{ $labels.instance }}"
+      description: "Device {{ $labels.uid }} of job {{ $labels.job }} Device_Playback_Quality < 3"
+
+  # Alert for Device_Presence_Quality != 0 for >1 minutes.
+  - alert: Device_Presence_Quality
+    expr: Device_Presence_Quality != 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: " Device {{ $labels.uid }} Device_Presence_Quality != 0 for >1 minutes in {{ $labels.instance }}"
+      description: "Device {{ $labels.uid }} of job {{ $labels.job }} Device_Presence_Quality != 0"
+
+  # Alert for Device_Status_Message_Quality == 0 for >1 minutes.
+  - alert: Device_Status_Message_Quality 
+    expr: Device_Status_Message_Quality == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: " Device {{ $labels.uid }} Device_Status_Message_Quality == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "Device {{ $labels.uid }} of job {{ $labels.job }} Device_Status_Message_Quality == 0"
+
+  # Alert for Device_Xmpp_Offline_Count != 0 for >1 minutes.
+  - alert: Device_Xmpp_Offline_Count 
+    expr: Device_Xmpp_Offline_Count != 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: " Device {{ $labels.uid }} Device_Xmpp_Offline_Count != 0 for >1 minutes in {{ $labels.instance }}"
+      description: "Device {{ $labels.uid }} of job {{ $labels.job }} Device_Xmpp_Offline_Count != 0"
+
+  # Alert for Device_Xmpp_Online_Count == 0 for >1 minutes.
+  - alert: Device_Xmpp_Online_Count 
+    expr: Device_Xmpp_Online_Count == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Device {{ $labels.uid }} Device_Xmpp_Online_Count == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "Device {{ $labels.uid }} of job {{ $labels.job }} Device_Xmpp_Online_Count == 0"
+
+  # Alert for Device_Connectivity == 0 for >1 minutes.
+  - alert: Device_Connectivity
+    expr: Device_Connectivity == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: " Device {{ $labels.uid }} Device_Connectivity == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "Device {{ $labels.uid }} of job {{ $labels.job }} Device_Connectivity == 0"
+
+  # Alert for Device_Xmpp_Online == 0 for >1 minutes.
+  - alert: Device_Xmpp_Online
+    expr: Device_Xmpp_Online == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations: 
+      summary: " Device {{ $labels.uid }} Device_Xmpp_online == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "Device {{ $labels.uid }} of job {{ $labels.job }} Device_Xmpp_Online == 0"
+
+  # Alert for cpu_warning_info for >1 minutes.
+  - alert: cpu_warning_info
+    expr: (100 * (1 - avg(irate(node_cpu{mode="idle"}[5m])) BY (instance))) > 60
+    for: 1m
+    labels:
+      severity: info
+    annotations:
+      summary: "cpu_warning_info for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} cpu_warning_info"
+
+  # Alert for cpu_warning_limit for >1 minutes.
+  - alert: cpu_warning_limit
+    expr: (100 * (1 - avg(irate(node_cpu{mode="idle"}[5m])) BY (instance))) > 80
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "cpu_warning_limit for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} cpu_warning_limit"
+
+  # Alert for cpu_threshold_exceeded for >1 minutes.
+  - alert: cpu_threshold_exceeded
+    expr: (100 * (1 - avg(irate(node_cpu{mode="idle"}[5m])) BY (instance))) > 90
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "cpu_threshold_exceeded for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} cpu_threshold_exceeded"
+
+  # Alert for mem_warning_info for >1 minutes.
+  - alert: mem_warning_info
+    expr: (node_memory_MemFree + node_memory_Cached + node_memory_Buffers) / 1000000 < 3072
+    for: 1m
+    labels:
+      severity: info
+    annotations:
+      summary: "mem_warning_info for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mem_warning_info"
+
+  # Alert for mem_warning_limit for >1 minutes.
+  - alert: mem_warning_limit
+    expr: (node_memory_MemFree + node_memory_Cached + node_memory_Buffers) / 1000000 < 2048
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "mem_warning_limit for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mem_warning_limit"
+
+  # Alert for mem_threshold_exceeded for >1 minutes.
+  - alert: mem_threshold_exceeded
+    expr: (node_memory_MemFree + node_memory_Cached + node_memory_Buffers) / 1000000 < 1024
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mem_threshold_exceeded for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mem_threshold_exceeded"
+
+  # Alert for filesystem_warning_info for >1 minutes.
+  - alert: filesystem_warning_info
+    expr: node_filesystem_avail{mountpoint="/"} / node_filesystem_size * 100 < 60
+    for: 1m
+    labels:
+      severity: info
+    annotations:
+      summary: "filesystem_warning_info for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} filesystem_warning_info"
+
+  # Alert for filesystem_warning_limit for >1 minutes.
+  - alert: filesystem_warning_limit
+    expr: node_filesystem_avail{mountpoint="/"} / node_filesystem_size * 100 < 50
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "filesystem_warning_limit for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} filesystem_warning_limit"
+
+  # Alert for filesystem_threshold_exceeded for >1 minutes.
+  - alert: filesystem_threshold_exceeded
+    expr: node_filesystem_avail{mountpoint="/"} / node_filesystem_size * 100 < 30
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "filesystem_threshold_exceeded for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} filesystem_threshold_exceeded"
+
+  # Alert for rabbitmq_up == 0 for >1 minutes.
+  - alert: rabbitmq_up
+    expr: rabbitmq_up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "rabbitmq_up == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} rabbitmq_up == 0"
+
+  # Alert for rabbitmq_node_disk_free_alarm != 0 for >1 minutes.
+  - alert: rabbitmq_node_disk_free_alarm
+    expr: rabbitmq_node_disk_free_alarm != 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "rabbitmq_node_disk_free_alarm != 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} rabbitmq_node_disk_free_alarm != 0"
+
+  # Alert for rabbitmq_node_mem_alarm != 0 for >1 minutes.
+  - alert: rabbitmq_node_mem_alarm
+    expr: rabbitmq_node_mem_alarm != 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "rabbitmq_node_mem_alarm != 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} rabbitmq_node_mem_alarm != 0"
+
+  # Alert for rabbitmq_running == 0 for >1 minutes.
+  - alert: rabbitmq_running
+    expr: rabbitmq_running == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "rabbitmq_running == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} rabbitmq_running == 0"
+
+  # Alert for rabbitmq_connectionsTotal == 0 for >1 minutes.
+  - alert: rabbitmq_connectionsTotal
+    expr: rabbitmq_connectionsTotal == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "rabbitmq_connectionsTotal == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} rabbitmq_connectionsTotal == 0"
+
+  # Alert for rabbitmq_sockets_total == 0 for >1 minutes.
+  - alert: rabbitmq_sockets_total
+    expr: rabbitmq_sockets_total == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "rabbitmq_sockets_total == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} rabbitmq_sockets_total == 0"
+
+  # Alert for mysql_global_status_connection_errors_total !=0 for >1 minutes.
+  - alert: mysql_global_status_connection_errors_total
+    expr: mysql_global_status_connection_errors_total !=0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_status_connection_errors_total !=0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_status_connection_errors_total !=0"
+
+  # Alert for mysql_global_status_uptime == 0 for >1 minutes.
+  - alert: mysql_global_status_uptime
+    expr: mysql_global_status_uptime == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_status_uptime == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_status_uptime == 0"
+
+  # Alert for mysql_global_variables_port != 3306 for >1 minutes.
+  - alert: mysql_global_variables_port
+    expr: mysql_global_variables_port != 3306
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_variables_port != 3306 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_variables_port != 3306"
+
+  # Alert for mysql_up == 0 for >1 minutes.
+  - alert: mysql_up
+    expr: mysql_up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_up == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_up == 0"
+
+  # Alert for mysql_global_status_connections == 0 for >1 minutes.
+  - alert: mysql_global_status_connections
+    expr: mysql_global_status_connections == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_status_connections == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_status_connections == 0"
+
+  # Alert for mysql_global_status_questions == 0 for >1 minutes.
+  - alert: mysql_global_status_questions
+    expr: mysql_global_status_questions == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_status_questions == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_status_questions == 0"
+
+  # Alert for mysql_global_status_threads_cached == 0 for >1 minutes.
+  - alert: mysql_global_status_threads_cached 
+    expr: mysql_global_status_threads_cached == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_status_threads_cached == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_status_threads_cached == 0"
+
+  # Alert for mysql_global_status_threads_connected == 0 for >1 minutes.
+  - alert: mysql_global_status_threads_connected
+    expr: mysql_global_status_threads_connected == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_status_threads_connected == 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_status_threads_connected == 0"
+
+  # Alert for mysql_global_status_threads_connected > 100 for >1 minutes.
+  - alert: mysql_global_status_threads_connected
+    expr: mysql_global_status_threads_connected > 100
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_status_threads_connected > 100 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_status_threads_connected > 100"
+
+  # Alert for mysql_global_status_slow_queries != 0 for >1 minutes.
+  - alert: mysql_global_status_slow_queries
+    expr: mysql_global_status_slow_queries != 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_status_slow_queries != 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_status_slow_queries != 0"
+
+  # Alert for mysql_global_status_aborted_connects != 0 for >1 minutes.
+  - alert: mysql_global_status_aborted_connects
+    expr: mysql_global_status_aborted_connects != 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "mysql_global_status_aborted_connects != 0 for >1 minutes in {{ $labels.instance }}"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} mysql_global_status_aborted_connects != 0"
+
+  # Alert for up{job="device-telemetry-exporter"} != 1 for >10 minutes.
+  - alert: device-telemetry-exporter
+    expr: up{job="device-telemetry-exporter"} != 1
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Device telemetry exporter has been DOWN for over 10 minutes"
+      description: "Device telemetry exporter has been DOWN for over 10 minutes"
+
+  # Alert for Device_Cpu_Temperature < 0.0 OR Device_Cpu_Temperature >= 60.0 for >5 minutes.
+  - alert: Device_Cpu_Temperature
+    expr: Device_Cpu_Temperature < 0.0 OR Device_Cpu_Temperature >= 60.0
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 5 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 5 min: current value: {{ $value }}"
+
+  # Alert for Device_Cpu_Load >= 99.0 for >5 minutes.
+  - alert: Device_Cpu_Load
+    expr: Device_Cpu_oad >= 99.0
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 5 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 5 min: current value: {{ $value }}"
+
+  # Alert for DeviceHeapAvailableBytes for >5 minutes.
+  - alert: DeviceHeapAvailableBytes
+    expr: (device_heap_max_bytes - device_heap_current_bytes + device_heap_available_bytes) / 0.1  <= device_heap_max_bytes
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} heap has been at 10% or lower for over 5 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} heap has been at 10 % or lower for over 5 min: current value: {{ $value }}"
+
+  # Alert for DeviceRamAvailableBytes for >10 minutes.
+  - alert: DeviceRamAvailableBytes
+    expr: round(100 * device_ram_available_bytes / device_ram_total_bytes, 0.01) <= 10.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} ram has been at 10% or lower for over 5 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been at 10% or lower for over 5 min: current value: {{ $value }}"
+
+  # Alert for DeviceStorageSd1AvailableBytes for >10 minutes.
+  - alert: DeviceStorageSd1AvailableBytes
+    expr: round(100 * device_sd1_available_bytes / device_sd1_total_bytes, 0.01) <= 10.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for DeviceEnvRelativeHumidity for >10 minutes.
+  - alert: DeviceEnvRelativeHumidity
+    expr: device_env_relative_humidity >= 90.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for DeviceNtpRmsOffset for >10 minutes.
+  - alert: DeviceNtpRmsOffset
+    expr: device_ntp_rms_offset >= 0.05
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for DeviceNtpRmsHighOffset for >1 minutes.
+  - alert: DeviceNtpRmsHighOffset
+    expr: device_ntp_rms_offset >= 0.2
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 1 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 1 min: current value: {{ $value }}"
+
+  # Alert for DeviceEnclosureAirHumidity for >60 minutes.
+  - alert: DeviceEnclosureAirHumidity
+    expr: device_enclosure_air_humidity <= 10.0 OR device_enclosure_air_humidity >= 90.0
+    for: 60m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 60 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 60 min: current value: {{ $value }}"
+
+  # Alert for Device3v3AuxiliaryVoltage for >10 minutes.
+  - alert: Device3v3AuxiliaryVoltage
+    expr: device_3v3_auxiliary_voltage <= 3.1 OR device_3v3_auxiliary_voltage >= 3.5
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device3v3AuxiliaryCurrent for >10 minutes.
+  - alert: Device3v3AuxiliaryCurrent
+    expr: device_3v3_auxiliary_current >= 2.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device3v3AuxiliaryPower for >10 minutes.
+  - alert: Device3v3AuxiliaryPower
+    expr: device_3v3_auxiliary_power >= 6.6
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device5vMainVoltage for >10 minutes.
+  - alert: Device5vMainVoltage
+    expr: device_5v_main_voltage <= 4.75 OR device_5v_main_voltage >= 5.25
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device5vMainCurrent for >10 minutes.
+  - alert: Device5vMainCurrent
+    expr: device_5v_main_current <= 0.2 OR device_5v_main_current >= 2.4
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device5vMainPower for >10 minutes.
+  - alert: Device5vMainPower
+    expr: device_5v_main_power <= 1 OR device_5v_main_power >= 12.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device5vAuxiliaryVoltage for >10 minutes.
+  - alert: Device5vAuxiliaryVoltage
+    expr: device_5v_auxiliary_voltage <= 4.75 OR device_5v_auxiliary_voltage >= 5.25
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device5vAuxiliaryCurrent for >10 minutes.
+  - alert: Device5vAuxiliaryCurrent
+    expr: device_5v_auxiliary_current >= 2.4
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device5vAuxiliaryPower for >10 minutes.
+  - alert: Device5vAuxiliaryPower
+    expr: device_5v_auxiliary_power >= 12.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device12vMainVoltage for >10 minutes.
+  - alert: Device12vMainVoltage
+    expr: device_12v_main_voltage <= 11.4 OR device_12v_main_voltage >= 12.6
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device12vMainCurrent for >10 minutes.
+  - alert: Device12vMainCurrent
+    expr: device_12v_main_current <= 0.1 OR device_12v_main_current >= 2.4
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device12vMainPower for >10 minutes.
+  - alert: Device12vMainPower
+    expr: device_12v_main_power <= 1.2 OR device_12v_main_power >= 28.8
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device12vAuxiliaryVoltage for >10 minutes.
+  - alert: Device12vAuxiliaryVoltage
+    expr: device_12v_auxiliary_voltage <= 11.4 OR device_12v_auxiliary_voltage >= 12.6
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device12vAuxiliaryCurrent for >10 minutes.
+  - alert: Device12vAuxiliaryCurrent
+    expr: device_12v_auxiliary_current >= 2.4
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device12vAuxiliaryPower for >10 minutes.
+  - alert: Device12vAuxiliaryPower
+    expr: device_12v_auxiliary_power >= 28.8
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device24vInputVoltage for >10 minutes.
+  - alert: Device24vInputVoltage
+    expr: device_24v_input_voltage <= 22.8 OR device_24v_input_voltage >= 25.2
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device24vInputCurrent for >10 minutes.
+  - alert: Device24vInputCurrent
+    expr: device_24v_input_current <= 0.4 OR device_24v_input_current >= 12.5
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device24vInputPower for >10 minutes.
+  - alert: Device24vInputPower
+    expr: device_24v_input_power <= 12.0 OR device_24v_input_power >= 300.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device24vPsuOutputVoltage for >10 minutes.
+  - alert: Device24vPsuOutputVoltage
+    expr: device_24v_psu_output_voltage <= 22.8 OR device_24v_psu_output_voltage >= 25.2
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device24vPsuOutputCurrent for >10 minutes.
+  - alert: Device24vPsuOutputCurrent
+    expr: device_24v_psu_output_current <= 2.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for Device24vPsuOutputPower for >10 minutes.
+  - alert: Device24vPsuOutputPower
+    expr: device_24v_psu_output_power <= 50.0 OR device_24v_psu_output_power >= 590.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for DeviceHotspot1Temperature for >10 minutes.
+  - alert: DeviceHotspot1Temperature
+    expr: device_hotspot1_temperature <= -20.0 OR device_hotspot1_temperature >= 80.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for DeviceHotspot2Temperature for >10 minutes.
+  - alert: DeviceHotspot2Temperature
+    expr: device_hotspot2_temperature <= -20.0 OR device_hotspot2_temperature >= 80.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for DeviceHotspot3Temperature for >10 minutes.
+  - alert: DeviceHotspot3Temperature
+    expr: device_hotspot3_temperature <= -20.0 OR device_hotspot3_temperature >= 80.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for DeviceAmbientAirTemperature for >10 minutes.
+  - alert: DeviceAmbientAirTemperature
+    expr: device_ambient_air_temperature <= 0.0 OR device_ambient_air_temperature >= 50.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+
+  # Alert for DeviceEnclosureAirTemperature for >10 minutes.
+  - alert: DeviceEnclosureAirTemperature
+    expr: device_enclosure_air_temperature <= 0.0 OR device_enclosure_air_temperature >= 60.0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"
+      description: "Device {{ $labels.uid }} has been out of range for over 10 min: current value: {{ $value }}"

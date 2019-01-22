@@ -1,0 +1,6 @@
+#Prometheus rabbitmq Exporter Upstart script
+
+start on startup
+script
+/usr/bin/rabbitmq_exporter --web.listen-address <%= node['prometheus']['rabbitmq_exporter']['exporter']['port'] %> >> /var/log/rabbitmq_exporter.log 2>&1
+end script

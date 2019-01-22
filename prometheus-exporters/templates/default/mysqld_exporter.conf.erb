@@ -1,0 +1,6 @@
+#Prometheus Mysql Exporter Upstart script
+
+start on startup
+script
+/usr/bin/mysqld_exporter -config.my-cnf=/etc/.my.cnf --web.listen-address <%= node['prometheus']['mysqld_exporter']['exporter']['port'] %> >> /var/log/mysqld_exporter.log 2>&1
+end script

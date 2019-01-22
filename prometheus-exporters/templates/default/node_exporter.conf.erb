@@ -1,0 +1,6 @@
+#Prometheus Node Exporter Upstart script
+
+start on startup
+script
+/usr/bin/node_exporter -web.listen-address <%= node['prometheus']['node_exporter']['exporter']['port'] %> >> /var/log/node_exporter.log 2>&1
+end script

@@ -1,0 +1,6 @@
+#Prometheus Postgres Exporter Upstart script
+
+start on startup
+script
+/usr/bin/postgres_exporter --web.listen-address <%= node['prometheus']['postgres_exporter']['exporter']['port'] %> >> /var/log/postgres_exporter.log 2>&1
+end script

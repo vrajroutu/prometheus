@@ -1,0 +1,6 @@
+#Prometheus Upstart script
+
+start on startup
+script
+/usr/bin/prometheus --config.file=/opt/prometheus/server/prometheus.yml --web.external-url=<%= node['monitoring']['prometheus']['web_url'] %> >> /var/log/prometheus.log 2>&1
+end script
